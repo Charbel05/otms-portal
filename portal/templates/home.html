@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="content">
+
+        <button id="toggle-button" class="circular-button">
+            <img src="../static/images/automation_logo.png" alt="Imagem do Botão para OTMS">
+        </button>
+        <div id="extra-buttons" class="hidden">
+
+            <button class="extra-button" onclick="showText('Materialize the value')">
+                <img src="../static/images/materialize_the_value.png" alt="Imagem do Botão materialize the value">
+            </button>
+
+            <button class="extra-button" onclick="showText('Pave the Future')">
+                <img src="../static/images/pave_the_future.png" alt="Imagem do Botão pave the future">
+            </button>
+
+            <button class="extra-button" onclick="showText('Protect the core')">
+                <img src="../static/images/protect_the_core.png" alt="Imagem do Botão protect the core">
+            </button>
+            <div id="display-text"></div>
+        </div>
+    
+    </div>
+
+{% endblock %} 

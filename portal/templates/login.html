@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="body-login">
+    <hr>
+    <div class="login-container">
+        <div class="col-sm">
+            <form method="POST" action="" class="border p-4 mt-2">
+                {{ form_Login.csrf_token }}
+                <legend>Login</legend>
+                <fieldset>
+                    <div class="form-group">
+                        {{ form_Login.email.label(class="form-control-label") }}
+                        {% if form_Login.email.errors %}
+                            {{ form_Login.email(class="form-control is-invalid") }}    
+                            <div class="invalid-feedback">
+                                {% for erro in form_Login.email.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form_Login.email(class="form-control") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form_Login.senha.label(class="form-control-label") }}
+                        {% if form_Login.senha.errors %}
+                            {{ form_Login.senha(class="form-control is-invalid") }}    
+                            <div class="invalid-feedback">
+                                {% for erro in form_Login.senha.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form_Login.senha(class="form-control") }}
+                        {% endif %}                        
+                    </div>
+                    <div class="form-group"> 
+                        {{ form_Login.lembrar.label(class="form-check-label") }}
+                        {{ form_Login.lembrar(class="form-check-input") }}
+                    </div>
+                </fieldset>
+                {{ form_Login.enviar_login(class="btn btn-primary mt-2 login-container-button") }}
+            </form>
+        </div>
+        <img src="../static/images/novelis_box_g1.jpeg" alt="logo novelis" >
+    </div>
+</div>
+    
+{% endblock %}

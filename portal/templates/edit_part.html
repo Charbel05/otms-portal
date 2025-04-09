@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+
+<div class="content">
+
+    <div>
+        <h1>Editar Part Number</h1>
+
+        <hr>
+
+        <form method="POST">
+                <br>
+
+                <h4 for="meuInput">Part Number:</h4>
+                <input type="text" id="part_number" name="part_number" value="{{ part.part_number }}">
+
+                <h4 for="meuInput">Product:</h4>
+                <input type="text" id="product" name="product" value="{{ part.product }}">
+                
+                <h4 for="vendor_id">Vendor</h4>
+                <select name="vendor_id" id="vendor_id" class="select2">
+                    {% for row in vendor %}
+                    <option 
+                    {% if part.vendor_id == row.id_vendors %} 
+                        selected 
+                    {% endif %}
+                    value="{{ row.id_vendors }}">{{ row.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <h4 for="obsolescence">Obsolescence</h4>
+                <select name="obsolescence" id="obsolescence">
+                    {% for row in obsolescence %}
+                    <option 
+                    {% if part.obsolescence_id == row.id_obs %} 
+                        selected 
+                    {% endif %}
+                    value="{{ row.id_obs }}">{{ row.status }}</option>
+                    {% endfor %}
+                </select>
+                
+                <h4 for="meuInput">Year of Discontinued State:</h4>
+                <input type="text" id="end_life" name="end_life" value="{{ part.end_life }}">
+                
+                <br>
+                <input type="submit" value="Salvar">
+                <input type="reset" value="Cancelar">
+            </div>
+            
+        </form>
+    </div>
+
+    <hr>
+
+</div>
+
+
+{% endblock %} 

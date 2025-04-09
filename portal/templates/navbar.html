@@ -1,0 +1,30 @@
+
+{% block body %}
+
+    <div class="navbar-dash">
+        <div>
+            <img src="../static/images/automation_logo.png" alt="OTMS_logo" style="width: 2cm; height: auto">
+        </div>
+        <div>
+            <h1>OTMS</h1>
+            <h3>Operational Technology Management System</h3>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <h3 class="dropdown-toggle" role="button" data-bs-toggle="dropdown">Navigation</h3>
+        <ul class="dropdown-menu" style="background-color: #A1DD00;">
+            <A href="/home">Home</A>            
+        </ul>
+        
+        <h3 class="dropdown-toggle" role="button" data-bs-toggle="dropdown">RPN</h3>
+        <ul class="dropdown-menu" style="background-color: #A1DD00;">
+            <a href="/add-rpn">Adicionar RPN</a>
+            <a href="/add-part-number">Adicionar Part Number</a>
+        </ul>
+
+        <A href="/perfil">Perfil</A>
+        <A href="/logout">Sair</A>
+    </div>
+
+{% endblock %}

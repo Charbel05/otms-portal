@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="content">
+
+        <div>
+            <h1>Adicionar RPN</h1>
+
+            <hr>
+
+            <form method="POST">
+                <label for="options"> Part Number: </label>
+                <select name="options" id="options" data-info='{{ options|tojson }}'
+                    onchange="updateInfo(
+                    'options', 'data-info', 
+                    {Obsolescence: 'Obsolescence', 
+                    Vendor: 'Vendor', 
+                    Obsolescence_level: 'Obsolescence_level'},
+                    'part_number'
+                )">
+                    {% for row in options %}
+                        <option value="{{ row['id_parts'] }}">{{ row['part_number'] }}</option>
+                    {% endfor %}
+                </select>
+                
+                <div>
+                    <div>
+                        <h4>Vendor: </h4>
+                        <a id="Vendor"> </a>
+                    </div>
+                    <div>
+                        <h4>Obsolescence: </h4>
+                        <a id="Obsolescence"> </a>
+                    </div>
+                    <h4> Obsolescence level: </h4>                        
+                    <a id="Obsolescence_level"> </a>
+
+                    <br>
+                    
+                    <label for="loc"> Location: </label>
+                    <select name="loc" id="loc" data-info='{{ loc|tojson }}'
+                    onchange="updateInfo(
+                        'loc', 'data-info', 
+                        {groups: 'groups'},
+                        'description_category'
+                        )">
+                        {% for row in loc %}
+                            <option value="{{ row['id_location'] }}">{{ row['description_category'] }}</option>
+                        {% endfor %}
+                    </select>
+                    <h4>Responsible Area:</h4>
+                    <a id="groups"> </a>
+
+                    <h4 > Costumer impact level </h4>
+                    <select name="ci_value" id="ci_value">
+                        <option value=null></option>
+                        <option value=4>Incomplete</option>
+                        <option value=1>No Impact</option>
+                        <option value=2>Shipment Delays</option>
+                        <option value=3>Customer Shutdown</option>
+                    </select>
+
+                    <h4 > Spare availability </h4>
+                    <select name="sa_value" id="sa_value">
+                        <option value=null></option>
+                        <option value=5>Incomplete</option>
+                        <option value=1>Installed Spare</option>
+                        <option value=3>Spare On Site or Off Site < 8 Hours Lead Time</option>
+                        <option value=2>Spare On Site or Off Site > 8 Hours Lead Time</option>
+                        <option value=4>No Spare</option>
+                    </select>
+
+                    <h4 > Spare Condition </h4>
+                    <select name="sc_value" id="sc_value">
+                        <option value=null></option>
+                        <option value=6>Incomplete</option>
+                        <option value=1>Excellent Condition</option>
+                        <option value=3>Good Condition</option>
+                        <option value=5>Fair Condition</option>
+                        <option value=4>Poor Condition</option>
+                        <option value=2>Do Not Use or No Spare</option>
+                    </select>
+
+                    <h4 > Vendor Support </h4>
+                    <select name="vendor_support" id="vendor_support">
+                        <option value="null"></option>
+                        <option value=1>Very Limited</option>
+                        <option value=2>Poor</option>
+                        <option value=3>Marginal</option>
+                        <option value=4>Adequate</option>
+                        <option value=5>Excellent</option>
+                        <option value=6>Incomplete</option>
+                    </select>
+                    
+                    <h4 > System Complexity </h4>
+                    <select name="system_complexity" id="system_complexity">
+                        <option value="null"></option>
+                        <option value=1>Low & Multiple Sourcing</option>
+                        <option value=2>Medium Specialized & Limited Sourcing</option>
+                        <option value=3>Medium Specialized & Multiple Sourcing</option>
+                        <option value=4>Highly Specialized &  Limited Sourcing</option>
+                        <option value=5>Incomplete</option>
+                    </select>
+
+                    <h4>System Group</h4>
+                    <select name="sgroup" id="sgroup">
+                        {% for row in sgroup %}
+                            <option value="{{ row['id_s_group'] }}">{{ row['system_group'] }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <h4 for="meuInput">Installed Quantity:</h4>
+                    <input type="text" id="quantity" name="quantity" placeholder="Installed Quantity...">
+
+                    <h4 for="meuInput">Description:</h4>
+                    <input type="text" id="description" name="description" placeholder="Description...">
+
+                    <br>
+                    <input type="submit" value="Salvar">
+                    <input type="reset" value="Cancelar">
+                </div>
+                
+            </form>
+        </div>
+
+        <hr>
+    
+    </div>
+
+{% endblock %} 
