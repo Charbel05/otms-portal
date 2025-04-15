@@ -80,6 +80,10 @@ class Vendors(db.Model):
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
     
+class Regions(db.Model):
+    id_region = db.Column(db.Integer, primary_key=True)
+    region = db.Column(db.String(100), nullable=True)
+    abbreviation = db.Column(db.String(10), nullable=True)
 
 class Location(db.Model):
     id_location = db.Column(db.Integer, primary_key=True)

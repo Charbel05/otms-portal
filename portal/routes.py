@@ -5,7 +5,7 @@ import psycopg2
 import pandas as pd
 from portal import app, db, bcrypt
 from portal.forms import FormLogin
-from portal.models import Almox, Location, Obsolescence, Parts, System_groups, User_otms, Rpn, Vendors
+from portal.models import Almox, Location, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
 
@@ -178,10 +178,36 @@ def add_partnumber():
 @app.route('/add-vendor', methods=['GET', 'POST'])
 def add_vendor():
     
-    if request.method == 'POST':
-        print("pass")
+    sgroup = System_groups.query.order_by().all()
+    region = Regions.query.order_by().all()
 
-    return render_template('add_vendor.html')
+    if request.method == 'POST':
+        # Cria um novo objeto vendor   
+        new_vendor = Vendors()
+        new_vendor.name = request.form.get('name')
+        new_vendor.region_id = request.form.get('region')
+
+        support_after_sales = request.form.get('after_sales')
+        new_vendor.support_after_sales = True if support_after_sales == 'on' else False
+        
+        active = request.form.get('active')
+        new_vendor.active = True if active == 'on' else False
+
+        new_vendor.sgroups_id = request.form.get('sgroup')
+        new_vendor.site = request.form.get('site')
+        new_vendor.email = request.form.get('email')
+        new_vendor.phone = request.form.get('phone')
+        new_vendor.modified_by = current_user.get_name()
+
+        # Faz a consulta no banco para saber qual o último id
+        id_vendor = Vendors.query.order_by(Vendors.id_vendors.desc()).first()
+        id_vendor = id_vendor.id_vendors + 1
+        new_vendor.id_vendors = id_vendor
+        
+        db.session.add(new_vendor)
+        db.session.commit()
+
+    return render_template('add_vendor.html', sgroup=sgroup, region=region)
 
 @app.route('/edit-rpn/<id_rpn>', methods=['GET', 'POST'])
 def edit_rpn(id_rpn):

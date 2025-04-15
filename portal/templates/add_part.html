@@ -24,6 +24,10 @@
                         <option value="{{ row.id_vendors }}">{{ row.name }}</option>
                         {% endfor %}
                     </select>
+                    <a type="button" class="btn btn-primary" href="{{ url_for('add_vendor') }}">
+                        +
+                    </a>
+                    <br>
 
                     <h4 for="obsolescence">Obsolescence</h4>
                     <select name="obsolescence" id="obsolescence">
