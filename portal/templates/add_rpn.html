@@ -16,7 +16,7 @@
                     'options', 'data-info', 
                     {Obsolescence: 'Obsolescence', 
                     Vendor: 'Vendor', 
-                    Obsolescence_level: 'Obsolescence_level'},
+                    product: 'product'},
                     'part_number'
                 )">
                     {% for row in options %}
@@ -37,6 +37,10 @@
                     <div>
                         <h4>Obsolescence: </h4>
                         <a id="Obsolescence"> </a>
+                    </div>
+                    <div>
+                        <h4>Description: </h4>
+                        <a id="product"> </a>
                     </div>
 
                     <br>

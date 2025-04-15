@@ -175,6 +175,14 @@ def add_partnumber():
 
     return render_template('add_part.html', vendor=vendor, obsolescence=obsolescence)
 
+@app.route('/add-vendor', methods=['GET', 'POST'])
+def add_vendor():
+    
+    if request.method == 'POST':
+        print("pass")
+
+    return render_template('add_vendor.html')
+
 @app.route('/edit-rpn/<id_rpn>', methods=['GET', 'POST'])
 def edit_rpn(id_rpn):
 

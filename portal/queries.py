@@ -1,7 +1,7 @@
 # Query para SELECIONAR as informações já pré-definidas de um partnumber
 def query_select_to_add():
     return """
-	SELECT p.id_parts, p.part_number, obs.status as "Obsolescence", obs.level as "Obsolescence_level", v.name as "Vendor"
+	SELECT p.id_parts, p.part_number, p.product, obs.status as "Obsolescence", v.name as "Vendor"
     FROM parts p
     INNER JOIN obsolescence obs on p.obsolescence_id = obs.id_obs
     INNER JOIN vendors v on p.vendor_id = v.id_vendors
