@@ -49,5 +49,9 @@ function updateText(selectId, textId, data) {
 }
 
 
-
-
+function updateLabel(selectId, labelId) {
+    var select = document.getElementById(selectId);
+    var description = select.options[select.selectedIndex].getAttribute('data-description');
+    document.getElementById(labelId).innerText = description;
+}
+    

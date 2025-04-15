@@ -5,7 +5,7 @@ import psycopg2
 import pandas as pd
 from portal import app, db, bcrypt
 from portal.forms import FormLogin
-from portal.models import Location, Obsolescence, Parts, System_groups, User_otms, Rpn, Vendors
+from portal.models import Almox, Location, Obsolescence, Parts, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
 
@@ -109,25 +109,31 @@ def add_rpn():
     # Seleciona a tabela de System Groups
     sgroup = System_groups.query.order_by(System_groups.id_s_group).all()
 
+    almox = Almox.query.all()
+
     if request.method == 'POST':
         try:   
-            part_id = request.form.get('options')
-            ci_id = request.form.get('ci_value')
-            sa_id = request.form.get('sa_value')
-            sc_id = request.form.get('sc_value')
-            v_support_id = request.form.get('vendor_support')
-            loc_id = request.form.get('loc')
-            sgroups_id = request.form.get('sgroup')
-            scomplexity_id = request.form.get('system_complexity')
-            quantity = request.form.get('quantity')
-            description = request.form.get('description')
+            new_rpn = Rpn()
+            new_rpn.part_id = request.form.get('options')
+            new_rpn.c_impact_id = request.form.get('ci_value')
+            new_rpn.spare_av_id = request.form.get('sa_value')
+            new_rpn.spare_c_id = request.form.get('sc_value')
+            new_rpn.vendorsuport_id = request.form.get('vendor_support')
+            new_rpn.loc_id = request.form.get('loc')
+            new_rpn.sgroups_id = request.form.get('sgroup')
+            new_rpn.scomplexity_id = request.form.get('system_complexity')
+            new_rpn.quantity = request.form.get('quantity')
+            new_rpn.description = request.form.get('description')
+            new_rpn.pa = request.form.get('pa')
+            new_rpn.cost = request.form.get('cost')            
+            inactive = request.form.get('inactive')
+            new_rpn.inactive = 1 if inactive == 'on' else 0
 
             # Faz a consulta no banco para saber qual o último id
             last_id = Rpn.query.order_by(Rpn.id_rpn.desc()).first()
-            id_rpn = last_id.id_rpn + 1
+            new_rpn.id_rpn = last_id.id_rpn + 1
 
             # Cria um novo objeto rpn e adiciona 
-            new_rpn = Rpn(id_rpn=id_rpn, part_id=part_id, c_impact_id=ci_id, spare_av_id=sa_id, spare_c_id=sc_id, vendorsuport_id=v_support_id, loc_id=loc_id, sgroups_id=sgroups_id, scomplexity_id=scomplexity_id, quantity=quantity, description=description)
             db.session.add(new_rpn)
             db.session.commit()
 
@@ -135,7 +141,7 @@ def add_rpn():
             flash(f"Erro ao adicionar o item: {str(e)}")
             return render_template('add_rpn.html')
 
-    return render_template('add_rpn.html', options=options, loc=loc_dict, sgroup=sgroup)
+    return render_template('add_rpn.html', options=options, loc=loc_dict, sgroup=sgroup, almox=almox)
         
 @app.route('/add-part-number', methods=['GET', 'POST'])
 def add_partnumber(): 

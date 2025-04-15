@@ -35,6 +35,9 @@ class Rpn(db.Model):
     modified_by = db.Column(db.String(200), nullable=True)
     created_by = db.Column(db.String(200), nullable=True)
     quantity = db.Column(db.Integer, nullable=True)
+    pa = db.Column(db.String(20), nullable=True)
+    cost = db.Column(db.Integer, nullable=True)
+    inactive = db.Column(db.Integer, nullable=True)
 
 class Parts(db.Model):
     id_parts = db.Column(db.Integer, primary_key=True)
@@ -50,6 +53,14 @@ class Parts(db.Model):
 
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+class Almox(db.Model):
+    id_almox = db.Column(db.Integer, primary_key=True)
+    cd_item = db.Column(db.String(200), nullable=True)
+    qtd = db.Column(db.Integer, nullable=True)
+    active = db.Column(db.Boolean, nullable=True)
+    description = db.Column(db.String(200), nullable=True)
+    part_number = db.Column(db.String(200), nullable=True)
 
 class Vendors(db.Model):
     id_vendors = db.Column(db.Integer, primary_key=True)
