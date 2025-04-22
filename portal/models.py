@@ -50,6 +50,7 @@ class Parts(db.Model):
     created = db.Column(db.Date, nullable=True)
     last_modified = db.Column(db.Date, default=datetime.date.today)
     modified_by = db.Column(db.String(200), nullable=True)
+    fotos = db.Column(db.String(200), nullable=True)
 
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}

@@ -1,10 +1,11 @@
 from flask import render_template, request, redirect, url_for, flash
 from sqlalchemy.orm import aliased
+from werkzeug.utils import secure_filename
 import datetime
 import psycopg2
 import pandas as pd
 from portal import app, db, bcrypt
-from portal.forms import FormLogin
+from portal.forms import FormLogin, FormPhoto
 from portal.models import Almox, Location, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
@@ -109,6 +110,14 @@ def add_rpn():
     # Seleciona a tabela de System Groups
     sgroup = System_groups.query.order_by(System_groups.id_s_group).all()
 
+    
+    vendor_alias = aliased(Vendors)
+    obsolescence_alias = aliased(Obsolescence)
+    parts = db.session.query(Parts, vendor_alias, obsolescence_alias).join(vendor_alias, Parts.vendor_id == vendor_alias.id_vendors).join(obsolescence_alias, Parts.obsolescence_id == obsolescence_alias.id_obs).all()
+    # print(parts)
+    # for part, vendor, obsolescence in parts:
+    #     print(f"Part Number: {part.part_number}, Vendor: {vendor.name}, Obsolescence: {obsolescence.status}")
+    
     almox = Almox.query.all()
 
     if request.method == 'POST':
@@ -141,7 +150,7 @@ def add_rpn():
             flash(f"Erro ao adicionar o item: {str(e)}")
             return render_template('add_rpn.html')
 
-    return render_template('add_rpn.html', options=options, loc=loc_dict, sgroup=sgroup, almox=almox)
+    return render_template('add_rpn.html', options=options, loc=loc_dict, sgroup=sgroup, almox=almox, parts=parts)
         
 @app.route('/add-part-number', methods=['GET', 'POST'])
 def add_partnumber(): 
@@ -151,29 +160,40 @@ def add_partnumber():
     # Seleciona a tabela de Obsolescence
     obsolescence = Obsolescence.query.order_by(Obsolescence.level).all()
     
+    parts = Parts.query.order_by().all()
+    form_photo = FormPhoto()
+    
+    nome_seguro = ""
     if request.method == 'POST':
         try: 
-            part_number = request.form.get('part_number')
-            product = request.form.get('product')
-            vendor_id = request.form.get('vendor_id')
-            obsolescence_id = request.form.get('obsolescence')
-            end_life = request.form.get('end_life')
+            # Cria um novo objeto rpn e adiciona           
+            new_part = Parts(created=datetime.date.today(), modified_by=current_user.get_name())
+            new_part.part_number = request.form.get('part_number')
+            new_part.product = request.form.get('product')
+            new_part.vendor_id = request.form.get('vendor_id')
+            new_part.obsolescence_id = request.form.get('obsolescence')
+            new_part.end_life = request.form.get('end_life')
             # Faz a consulta no banco para saber qual o último id
             last_id = Parts.query.order_by(Parts.id_parts.desc()).first()
-            id_parts = last_id.id_parts + 1
-            # Cria um novo objeto rpn e adiciona           
-            new_part = Parts(id_parts=id_parts, part_number=part_number, product=product, vendor_id=vendor_id, obsolescence_id=obsolescence_id, end_life=end_life, created=datetime.date.today(), modified_by=current_user.get_name())
+            new_part.id_parts = last_id.id_parts + 1
+
+            # if(form_photo.btt_confirm()):
+            arquivo = form_photo.foto.data
+            nome_seguro = secure_filename(arquivo.filename)
+            caminho = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"], nome_seguro)
+            arquivo.save(caminho)
+            new_part.fotos = nome_seguro
+            
+
             db.session.add(new_part)
             db.session.commit()
 
         except Exception as e:
             flash(f"Erro ao adicionar o part number: {str(e)}")
+            print(f"Erro ao adicionar o part number: {str(e)}")
             return render_template('add_part.html')
 
-        finally:
-            return render_template('add_part.html', vendor=vendor, obsolescence=obsolescence)
-
-    return render_template('add_part.html', vendor=vendor, obsolescence=obsolescence)
+    return render_template('add_part.html', vendor=vendor, obsolescence=obsolescence, form_photo=form_photo, filename=nome_seguro, parts=parts)
 
 @app.route('/add-vendor', methods=['GET', 'POST'])
 def add_vendor():

@@ -10,18 +10,26 @@
             <hr>
 
             <form method="POST">
-                <label for="options"> Part Number: </label>
-                <select name="options" id="options" data-info='{{ options|tojson }}'
+                <label for="parts"> Part Number: </label>                
+                <select name="parts" id="parts" data-base-url="{{ url_for('static', filename='upload_photos/') }}"
                     onchange="updateInfo(
-                    'options', 'data-info', 
+                    'parts', 
                     {Obsolescence: 'Obsolescence', 
                     Vendor: 'Vendor', 
-                    product: 'product'},
+                    product: 'product', 
+                    fotos: 'fotos'},
                     'part_number'
                 )">
-                    {% for row in options %}
-                        <option value="{{ row['id_parts'] }}">{{ row['part_number'] }}</option>
-                    {% endfor %}
+
+                {% for part, vendor, obsolescence in parts %}
+                    <option value="{{ part.id_parts }}" 
+                        data-obsolescence="{{ obsolescence.status }}" 
+                        data-vendor="{{ vendor.name }}" 
+                        data-product="{{ part.product }}" 
+                        data-fotos="{{ part.fotos }}">
+                        {{ part.part_number }}
+                    </option>
+                {% endfor %}
                 </select>
                 
                 <a type="button" class="btn btn-primary" href="{{ url_for('add_partnumber') }}">
@@ -42,6 +50,12 @@
                         <h4>Description: </h4>
                         <a id="product"> </a>
                     </div>
+                    
+                    <div>
+                        <h4>Foto: </h4>
+                        <img id="fotos" alt="Prévia da imagem" style="max-width: 200px; max-height: 200px;">
+                    </div>
+
 
                     <br>
                     

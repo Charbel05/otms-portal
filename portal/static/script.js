@@ -12,25 +12,35 @@ function showText(text) {
     displayText.textContent = text;
 }
 
-// Função para atualizar textos estáticos após selecionar um elemento select
-function updateInfo(selectId, dataAttribute, fields, compareField) {
-    var select = document.getElementById(selectId);
-    var selectedOption = select.options[select.selectedIndex].text;
-    var data = JSON.parse(select.getAttribute(dataAttribute));
 
-    for (var i = 0; i < data.length; i++) {
-        if (data[i][compareField] === selectedOption) { 
-            for (var field in fields) {
-                if (fields.hasOwnProperty(field)) {
-                    var element = document.getElementById(fields[field]);
-                    if (element) {
-                        element.innerHTML = data[i][field];
-                    }
-                }
-            }
-            break;
-        }
+document.getElementById('foto').addEventListener('change', function(event) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        var preview = document.getElementById('preview');
+        preview.src = reader.result;
+        preview.style.display = 'block';
     }
+    reader.readAsDataURL(event.target.files[0]);
+});
+    
+
+// Função para atualizar textos estáticos após selecionar um elemento select
+function updateInfo(selectId, fields, compareField) {
+    var select = document.getElementById(selectId);
+    var selectedOption = select.options[select.selectedIndex];
+    var baseUrl = select.getAttribute('data-base-url');
+
+    Object.keys(fields).forEach(field => {
+        var element = document.getElementById(fields[field]);
+        if (element) {
+            if (field === 'fotos') {
+                element.src = baseUrl + selectedOption.getAttribute('data-' + field);
+                console.log("Image Path:", baseUrl + selectedOption.getAttribute('data-' + field));
+            } else {
+                element.innerHTML = selectedOption.getAttribute('data-' + field);
+            }
+        }
+    });
 }
 
 // Exemplo de uso

@@ -17,6 +17,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'a4548ab07f9b2e1f2acb5d575d36a4e8'
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{user}:{password}@{host}:{port}/{dbname}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = 'static/upload_photos'
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
