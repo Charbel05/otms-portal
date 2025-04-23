@@ -157,7 +157,7 @@ switch {
     cursor: pointer;
     width: 40px;
     height: 20px;
-    background-color: #777777;
+    background-color: #ddd6d6;
     transition: .4s;
 }
 .slider:before {
@@ -171,7 +171,7 @@ switch {
     transition: .4s;
 }
 input:checked + .slider {
- background-color: #2196F3;
+ background-color: #1cce25;
 }
 
 input:checked + .slider:before {
@@ -184,4 +184,31 @@ border-radius: 20px;
     
 .slider.round:before {
 border-radius: 50%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.header h4 {
+    margin-left: 10px;
+}
+
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+    
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}    
+
+.image-preview {
+    max-width: 400px;
+    max-height: 400px;
 }

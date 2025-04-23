@@ -31,13 +31,14 @@ class Rpn(db.Model):
     sgroups_id = db.Column(db.Integer, nullable=True)
     vendorsuport_id = db.Column(db.Integer, nullable=True)
     description = db.Column(db.String(500), nullable=True)
-    last_modified = db.Column(db.String(200), nullable=True)
+    last_modified = db.Column(db.String(200), nullable=True, default=datetime.date.today)
     modified_by = db.Column(db.String(200), nullable=True)
     created_by = db.Column(db.String(200), nullable=True)
     quantity = db.Column(db.Integer, nullable=True)
     pa = db.Column(db.String(20), nullable=True)
     cost = db.Column(db.Integer, nullable=True)
     inactive = db.Column(db.Integer, nullable=True)
+    almox_id = db.Column(db.Integer, ForeignKey('almox.id_almox'), nullable=True)
 
 class Parts(db.Model):
     id_parts = db.Column(db.Integer, primary_key=True)
@@ -45,7 +46,6 @@ class Parts(db.Model):
     product = db.Column(db.String(200), nullable=True)
     vendor_id = db.Column(db.Integer, ForeignKey('vendors.id_vendors'), nullable=True)
     obsolescence_id = db.Column(db.Integer, ForeignKey('obsolescence.id_obs'), nullable=True)
-    almox_id = db.Column(db.Integer, nullable=True)
     end_life = db.Column(db.Integer, nullable=True)
     created = db.Column(db.Date, nullable=True)
     last_modified = db.Column(db.Date, default=datetime.date.today)

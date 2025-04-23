@@ -25,7 +25,7 @@ document.getElementById('foto').addEventListener('change', function(event) {
     
 
 // Função para atualizar textos estáticos após selecionar um elemento select
-function updateInfo(selectId, fields, compareField) {
+function updateInfo(selectId, fields) {
     var select = document.getElementById(selectId);
     var selectedOption = select.options[select.selectedIndex];
     var baseUrl = select.getAttribute('data-base-url');
@@ -35,20 +35,16 @@ function updateInfo(selectId, fields, compareField) {
         if (element) {
             if (field === 'fotos') {
                 element.src = baseUrl + selectedOption.getAttribute('data-' + field);
-                console.log("Image Path:", baseUrl + selectedOption.getAttribute('data-' + field));
             } else {
-                element.innerHTML = selectedOption.getAttribute('data-' + field);
+                var value = selectedOption.getAttribute('data-' + field);
+                element.innerHTML = value;
+                if (field === 'active') {
+                    element.style.color = value === 'True' ? 'green' : 'red';
+                }
             }
         }
     });
 }
-
-// Exemplo de uso
-updateInfo("loc", "data-info", {
-    groups: "groups"
-}, "description_category");  // Passar o campo de comparação como parâmetro
-
-
 
 // Função para auxiliar na edição de itens do RPN
 function updateText(selectId, textId, data) {
@@ -56,12 +52,5 @@ function updateText(selectId, textId, data) {
     var selectedValue = select.value;
     var textElement = document.getElementById(textId);
     textElement.innerText = data[selectedValue] || "None";
-}
-
-
-function updateLabel(selectId, labelId) {
-    var select = document.getElementById(selectId);
-    var description = select.options[select.selectedIndex].getAttribute('data-description');
-    document.getElementById(labelId).innerText = description;
 }
     

@@ -91,39 +91,22 @@ def perfil():
 @app.route('/add-rpn', methods=['GET', 'POST'])
 def add_rpn(): 
 
-    # Obtendo o partnumber e, por consequência, o de obsolesce e vendor
-    rows_view = connection(queries.query_select_to_add())
-    # Obtendo os nomes das colunas
-    col = connection(queries.query_select_to_add(), option="description")
-    colunas = [descricao[0] for descricao in col]
-    # Converte para DF
-    options = pd.DataFrame(rows_view, columns=colunas)
-    # Elimina as opções nulas, as opções duplicadas e tranforma o dataframe em dicionário
-    options.dropna(inplace=True)
-    options.drop_duplicates(inplace=True)
-    options = options.to_dict(orient='records')
-
     # Seleciona a tabela de location
     loc = Location.query.order_by(Location.description_category).all()
-    loc_dict = [item.to_dict() for item in loc]
 
     # Seleciona a tabela de System Groups
     sgroup = System_groups.query.order_by(System_groups.id_s_group).all()
 
-    
     vendor_alias = aliased(Vendors)
     obsolescence_alias = aliased(Obsolescence)
-    parts = db.session.query(Parts, vendor_alias, obsolescence_alias).join(vendor_alias, Parts.vendor_id == vendor_alias.id_vendors).join(obsolescence_alias, Parts.obsolescence_id == obsolescence_alias.id_obs).all()
-    # print(parts)
-    # for part, vendor, obsolescence in parts:
-    #     print(f"Part Number: {part.part_number}, Vendor: {vendor.name}, Obsolescence: {obsolescence.status}")
+    parts = db.session.query(Parts, vendor_alias, obsolescence_alias).join(vendor_alias, Parts.vendor_id == vendor_alias.id_vendors).join(obsolescence_alias, Parts.obsolescence_id == obsolescence_alias.id_obs).order_by(Parts.part_number).all()
     
     almox = Almox.query.all()
 
     if request.method == 'POST':
         try:   
             new_rpn = Rpn()
-            new_rpn.part_id = request.form.get('options')
+            new_rpn.part_id = request.form.get('parts')
             new_rpn.c_impact_id = request.form.get('ci_value')
             new_rpn.spare_av_id = request.form.get('sa_value')
             new_rpn.spare_c_id = request.form.get('sc_value')
@@ -133,10 +116,14 @@ def add_rpn():
             new_rpn.scomplexity_id = request.form.get('system_complexity')
             new_rpn.quantity = request.form.get('quantity')
             new_rpn.description = request.form.get('description')
+            new_rpn.created_by = current_user.get_name()
+            new_rpn.modified_by = current_user.get_name()
+            new_rpn.last_modified = datetime.date.today()
             new_rpn.pa = request.form.get('pa')
             new_rpn.cost = request.form.get('cost')            
             inactive = request.form.get('inactive')
             new_rpn.inactive = 1 if inactive == 'on' else 0
+            new_rpn.almox_id = request.form.get('almox')
 
             # Faz a consulta no banco para saber qual o último id
             last_id = Rpn.query.order_by(Rpn.id_rpn.desc()).first()
@@ -150,7 +137,7 @@ def add_rpn():
             flash(f"Erro ao adicionar o item: {str(e)}")
             return render_template('add_rpn.html')
 
-    return render_template('add_rpn.html', options=options, loc=loc_dict, sgroup=sgroup, almox=almox, parts=parts)
+    return render_template('add_rpn.html', loc=loc, sgroup=sgroup, almox=almox, parts=parts)
         
 @app.route('/add-part-number', methods=['GET', 'POST'])
 def add_partnumber(): 
