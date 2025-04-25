@@ -22,5 +22,6 @@ app.config['UPLOAD_FOLDER'] = 'static/upload_photos'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login = LoginManager(app)
+login.login_view = 'login'
 
 from portal import routes

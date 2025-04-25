@@ -26,7 +26,7 @@
         {% endwith %}
     </div>
 
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated and request.endpoint != 'login' %}
         {% include 'navbar.html' %}
     {% endif %}
 

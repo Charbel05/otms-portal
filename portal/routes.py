@@ -80,6 +80,7 @@ def login():
     return render_template('login.html', form_Login=form_Login)
 
 @app.route('/home')
+@login_required
 def home():
     return render_template('home.html')
 
@@ -89,6 +90,7 @@ def perfil():
     return f"Nome do usuário atual: {current_user.get_name()}"
 
 @app.route('/add-rpn', methods=['GET', 'POST'])
+@login_required
 def add_rpn(): 
 
     # Seleciona a tabela de location
@@ -140,6 +142,7 @@ def add_rpn():
     return render_template('add_rpn.html', loc=loc, sgroup=sgroup, almox=almox, parts=parts)
         
 @app.route('/add-part-number', methods=['GET', 'POST'])
+@login_required
 def add_partnumber(): 
 
     # Seleciona a tabela de Vendor
@@ -183,6 +186,7 @@ def add_partnumber():
     return render_template('add_part.html', vendor=vendor, obsolescence=obsolescence, form_photo=form_photo, filename=nome_seguro, parts=parts)
 
 @app.route('/add-vendor', methods=['GET', 'POST'])
+@login_required
 def add_vendor():
     
     sgroup = System_groups.query.order_by().all()
@@ -217,6 +221,7 @@ def add_vendor():
     return render_template('add_vendor.html', sgroup=sgroup, region=region)
 
 @app.route('/edit-rpn/<id_rpn>', methods=['GET', 'POST'])
+@login_required
 def edit_rpn(id_rpn):
 
     rpn = db.session.query(Rpn).filter_by(id_rpn=id_rpn).first()
@@ -259,6 +264,7 @@ def edit_rpn(id_rpn):
     return render_template('edit_rpn.html', rpn=rpn, part=part, vendors_list=vendors_list, part_list=part_list, sgroup=sgroup, obs=obs, loc=loc)
 
 @app.route('/edit-part-number/<partnumber>', methods=['GET', 'POST'])
+@login_required
 def edit_part_number(partnumber):
 
     part = db.session.query(Parts).filter_by(part_number=partnumber).first()
