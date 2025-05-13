@@ -1,6 +1,5 @@
 import flask_wtf
-import psycopg2
-from wtforms import FileField, StringField, PasswordField, SubmitField, BooleanField
+from wtforms import FileField, SelectField, StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Email, Length, ValidationError, EqualTo
 from portal.models import User_otms
 
@@ -13,3 +12,8 @@ class FormLogin(flask_wtf.FlaskForm):
 class FormPhoto(flask_wtf.FlaskForm):
     foto = FileField("Foto", validators=[DataRequired()])
     btt_confirm = SubmitField("Salvar")
+
+class FormRPN(flask_wtf.FlaskForm):
+    part_number = SelectField('Part number', choices=[])
+    vendor = StringField('Vendor')
+    obsolescence = StringField('Obsolescence')

@@ -7,6 +7,10 @@ document.getElementById('toggle-button').addEventListener('click', function() {
     }
 });
 
+function toggleButtons() {
+    const extraButtons = document.getElementById('extra-buttons');
+    extraButtons.classList.toggle('hidden');
+}
 function showText(text) {
     const displayText = document.getElementById('display-text');
     displayText.textContent = text;

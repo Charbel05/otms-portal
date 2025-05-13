@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'Bootstrap Icons';
+    src: url('css/fonts/bootstrap-icons.woff2') format('woff2');
+}
+
+
 .body-login {
     justify-content: center;
     align-items: center;
@@ -211,4 +217,19 @@ border-radius: 50%;
 .image-preview {
     max-width: 400px;
     max-height: 400px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+.select2-container {
+    width: 100% !important;
+}
+
+.btn-align {
+    margin-top: 2rem; /* Ajuste o valor conforme necessário */
+}
+
+.btn-add-pn{
+    width: 100%;
 }

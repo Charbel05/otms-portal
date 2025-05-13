@@ -5,55 +5,68 @@
     <div class="content">
 
         <div>
-            <h1>Adicionar novo Part Number</h1>
+            <h1 style="padding-left: 30%;">Adicionar novo Part Number</h1>
 
             <hr>
 
             <form method="POST" enctype="multipart/form-data">
-                    <br>
 
-                    <h4 for="meuInput">Part Number:</h4>
-                    <input type="text" id="part_number" name="part_number" placeholder="Part Number...">
+                <div class="row">
+                    
+                    <div class="col-md-3">
+                        <h4 for="meuInput">Part Number:</h4>
+                        <input type="text" id="part_number" name="part_number" placeholder="Part Number...">
+                    </div>
 
-                    <h4 for="meuInput">Product:</h4>
-                    <input type="text" id="product" name="product" placeholder="Little description...">
+                    <div class="col-md-3">
+                        <h4 for="meuInput">Product:</h4>
+                        <input type="text" id="product" name="product" placeholder="Little description...">
+                    </div>
                     
-                    <h4 for="vendor_id">Vendor</h4>
-                    <select name="vendor_id" id="vendor_id">
-                        {% for row in vendor %}
-                        <option value="{{ row.id_vendors }}">{{ row.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <a type="button" class="btn btn-primary" href="{{ url_for('add_vendor') }}">
-                        +
-                    </a>
-                    <br>
+                    <div class="col-md-3">
+                        <h4 for="vendor_id">Vendor</h4>
+                        <select class="form-control" name="vendor_id" id="vendor_id">
+                            {% for row in vendor %}
+                            <option value="{{ row.id_vendors }}">{{ row.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3 ">
+                        <a type="button" class="btn btn-primary btn-align" href="{{ url_for('add_vendor') }}">
+                            Adicionar Vendor +
+                        </a>
+                    </div>
 
-                    <h4 for="obsolescence">Obsolescence</h4>
-                    <select name="obsolescence" id="obsolescence">
-                        {% for row in obsolescence %}
-                        <option value="{{ row.id_obs }}">{{ row.status }}</option>
-                        {% endfor %}
-                    </select>
-                    
-                    <h4 for="meuInput">Year of Discontinued State:</h4>
-                    <input type="text" id="end_life" name="end_life" placeholder="Ex.: 2025">
-                    
-                    <br>                  
-                    <h4 for="meuInput">Foto:</h4>
-                    {{ form_photo.foto() }}
-                    <img id="preview" src="#" alt="Prévia da imagem" style="display: none; max-width: 200px; max-height: 200px;"/>
-                    
-                    <br>
-                    
-                    {{ form_photo.btt_confirm() }}
-                    <input type="reset" value="Cancelar">
                 </div>
+                
+                <div class="row">
+                    
+                    <div class="col-md-4">
+                        <h4 for="obsolescence">Obsolescence</h4>
+                        <select name="obsolescence" id="obsolescence">
+                            {% for row in obsolescence %}
+                            <option value="{{ row.id_obs }}">{{ row.status }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <h4 for="meuInput">Year of Discontinued State:</h4>
+                        <input type="text" id="end_life" name="end_life" placeholder="Ex.: 2025">
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h4 for="meuInput">Foto:</h4>
+                        {{ form_photo.foto() }}
+                        <img id="preview" src="#" alt="Prévia da imagem" style="display: none; max-width: 200px; max-height: 200px;"/>
+                    </div>
+                </div>                 
+                
+                <hr>
+                {{ form_photo.btt_confirm(class_="btn btn-success btn-lg btn-block btn-add-pn") }}
+            </div>
                 
             </form>
         </div>
-
-        <hr>
     
     </div>
 

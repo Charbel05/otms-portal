@@ -204,7 +204,6 @@ def add_vendor():
         active = request.form.get('active')
         new_vendor.active = True if active == 'on' else False
 
-        new_vendor.sgroups_id = request.form.get('sgroup')
         new_vendor.site = request.form.get('site')
         new_vendor.email = request.form.get('email')
         new_vendor.phone = request.form.get('phone')

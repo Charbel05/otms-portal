@@ -6,68 +6,72 @@
 <div class="content">
 
     <div>
-        <h1>Adicionar novo Vendor</h1>
+        <h1 style="padding-left: 35%;">Adicionar novo Vendor</h1>
 
         <hr>
 
         <form method="POST">
-                <br>
+            <br>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Name</h4>
+                    <input type="text" id="name" name="name" placeholder="Vendor name...">
+                </div>
 
-                <h4>Name</h4>
-                <input type="text" id="name" name="name" placeholder="Vendor name...">
-
-                <h4>After sales support</h4>                    
-                <label class="switch">
-                    <input type="checkbox" name="after_sales" id="after_sales">
-                    <span class="slider round"></span>
-                </label>
-                <br>
-
-                <h4>Active</h4>                    
-                <label class="switch">
-                    <input type="checkbox" name="active" id="active">
-                    <span class="slider round"></span>
-                </label>
-                <br>
+                <div class="col-md-3">
+                    <h4>After sales support</h4>                    
+                    <label class="switch">
+                        <input type="checkbox" name="after_sales" id="after_sales">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
                 
-                <h4>System Group</h4>
-                <select name="sgroup" id="sgroup">
-                    {% for row in sgroup %}
-                        <option value="{{ row['id_s_group'] }}">{{ row['system_group'] }}</option>
-                    {% endfor %}
-                </select>
+                <div class="col-md-3">
+                    <h4>Active</h4>                    
+                    <label class="switch">
+                        <input type="checkbox" name="active" id="active">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="col-md-3">
+                    <h4>Region</h4>
+                    <select name="region" id="region">
+                        {% for row in region %}
+                            <option value="{{ row['id_region'] }}">{{ row['region'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 
-                <h4>Region</h4>
-                <select name="region" id="region">
-                    {% for row in region %}
-                        <option value="{{ row['id_region'] }}">{{ row['region'] }}</option>
-                    {% endfor %}
-                </select>
-
-
-
-                <br>
-
-                <h4>Contact phone</h4>
-                <input type="text" id="phone" name="phone" placeholder="Phone">
-                
-                <h4>E-mail</h4>
-                <input type="text" id="email" name="email" placeholder="E-mail">
-                
-                <h4>Site</h4>
-                <input type="text" id="site" name="site">
-
-                <br>
-
-                <input type="submit" value="Salvar">
             </div>
+
+            <div class="row">                
+                                
+                <div class="col-md-3">
+                    <h4>Contact phone</h4>
+                    <input type="text" id="phone" name="phone" placeholder="Phone">
+                </div>
+                
+                <div class="col-md-3">
+                    <h4>E-mail</h4>
+                    <input type="text" id="email" name="email" placeholder="E-mail">
+                </div>
+                
+                <div class="col-md-3">
+                    <h4>Site</h4>
+                    <input type="text" id="site" name="site">
+                </div>
+                
+            </div>
+            
+
+            <br>
+            <hr>
+            <input style="width: 100%;" class="btn btn-success btn-lg btn-block" type="submit" value="Salvar">
             
         </form>
     </div>
-
-    <hr>
-
 </div>
-
 
 {% endblock %} 
