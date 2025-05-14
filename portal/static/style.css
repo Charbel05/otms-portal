@@ -222,14 +222,29 @@ border-radius: 50%;
 .form-group {
     margin-bottom: 1rem;
 }
+
+.form-label {
+    display: block;
+    font-size: 1.25em; /* Equivalente ao h4 */
+    margin-bottom: 5px;
+}
+.form-input {
+    width: 5cm;
+    box-sizing: border-box;
+}
+
 .select2-container {
-    width: 100% !important;
+    width: 80% !important;
 }
 
 .btn-align {
     margin-top: 2rem; /* Ajuste o valor conforme necessário */
 }
 
-.btn-add-pn{
+.btn-save{
+    width: 100%;
+}
+
+.btt-cancel{
     width: 100%;
 }

@@ -7,6 +7,12 @@ document.getElementById('toggle-button').addEventListener('click', function() {
     }
 });
 
+// Função para resetar o formulário ao clicar no botão de cancelar
+function resetForm(formId) {
+    document.getElementById(formId).reset();
+}
+
+
 function toggleButtons() {
     const extraButtons = document.getElementById('extra-buttons');
     extraButtons.classList.toggle('hidden');

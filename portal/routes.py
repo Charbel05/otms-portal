@@ -3,9 +3,8 @@ from sqlalchemy.orm import aliased
 from werkzeug.utils import secure_filename
 import datetime
 import psycopg2
-import pandas as pd
 from portal import app, db, bcrypt
-from portal.forms import FormLogin, FormPhoto
+from portal.forms import FormAddVendor, FormLogin, FormPhoto
 from portal.models import Almox, Location, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
@@ -189,8 +188,8 @@ def add_partnumber():
 @login_required
 def add_vendor():
     
-    sgroup = System_groups.query.order_by().all()
     region = Regions.query.order_by().all()
+    form_addVendor = FormAddVendor()
 
     if request.method == 'POST':
         # Cria um novo objeto vendor   
@@ -217,7 +216,7 @@ def add_vendor():
         db.session.add(new_vendor)
         db.session.commit()
 
-    return render_template('add_vendor.html', sgroup=sgroup, region=region)
+    return render_template('add_vendor.html', form_addVendor=form_addVendor)
 
 @app.route('/edit-rpn/<id_rpn>', methods=['GET', 'POST'])
 @login_required

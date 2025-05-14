@@ -10,57 +10,53 @@
 
         <hr>
 
-        <form method="POST">
+        <form id="form_addVendor" method="POST">
             <br>
             
             <div class="row">
-                <div class="col-md-3">
-                    <h4>Name</h4>
-                    <input type="text" id="name" name="name" placeholder="Vendor name...">
+                <div class="col-md-3 form-group">
+                    {{ form_addVendor.name.label(class_="form-label") }}
+                    {{ form_addVendor.name(class_="form-input")  }}
                 </div>
 
-                <div class="col-md-3">
-                    <h4>After sales support</h4>                    
+                <div class="col-md-3 form-group">
+                    {{ form_addVendor.after_sales_support.label(class_="form-label") }}
                     <label class="switch">
-                        <input type="checkbox" name="after_sales" id="after_sales">
+                        {{ form_addVendor.after_sales_support(class_="form-input") }}                 
                         <span class="slider round"></span>
                     </label>
                 </div>
                 
-                <div class="col-md-3">
-                    <h4>Active</h4>                    
+                <div class="col-md-3 form-group">
+                    {{ form_addVendor.active.label(class_="form-label") }}                 
                     <label class="switch">
-                        <input type="checkbox" name="active" id="active">
+                        {{ form_addVendor.active(class_="form-input") }}                 
                         <span class="slider round"></span>
                     </label>
                 </div>
 
-                <div class="col-md-3">
-                    <h4>Region</h4>
-                    <select name="region" id="region">
-                        {% for row in region %}
-                            <option value="{{ row['id_region'] }}">{{ row['region'] }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="col-md-3 form-group">
+                    {{ form_addVendor.region.label(class_="form-label") }}
+                    {{ form_addVendor.region(class_="form-input") }}
                 </div>
                 
             </div>
 
             <div class="row">                
                                 
-                <div class="col-md-3">
-                    <h4>Contact phone</h4>
-                    <input type="text" id="phone" name="phone" placeholder="Phone">
+                <div class="col-md-3 form-group">
+                    {{ form_addVendor.contact_phone.label(class_="form-label") }}
+                    {{ form_addVendor.contact_phone(class_="form-input") }}
                 </div>
                 
-                <div class="col-md-3">
-                    <h4>E-mail</h4>
-                    <input type="text" id="email" name="email" placeholder="E-mail">
+                <div class="col-md-3 form-group">
+                    {{ form_addVendor.email.label(class_="form-label") }}
+                    {{ form_addVendor.email(class_="form-input") }}
                 </div>
                 
-                <div class="col-md-3">
-                    <h4>Site</h4>
-                    <input type="text" id="site" name="site">
+                <div class="col-md-3 form-group">
+                    {{ form_addVendor.site.label(class_="form-label") }}
+                    {{ form_addVendor.site(class_="form-input") }}
                 </div>
                 
             </div>
@@ -68,8 +64,8 @@
 
             <br>
             <hr>
-            <input style="width: 100%;" class="btn btn-success btn-lg btn-block" type="submit" value="Salvar">
-            
+            {{ form_addVendor.save_btt(class="btn btn-success btn-lg btn-save") }}
+            <button style="width: 100%; margin-top: 0.5cm;" class="btn btn-danger" type="button" onclick="resetForm('form_addVendor')">Cancelar</button>
         </form>
     </div>
 </div>
