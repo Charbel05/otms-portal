@@ -5,7 +5,7 @@
     <div class="content">
 
         <div>
-            <h1 style="padding-left: 30%;">Adicionar novo Part Number</h1>
+            <h1 style="padding-left: 35%;">Adicionar Part Number</h1>
 
             <hr>
 
@@ -13,25 +13,21 @@
 
                 <div class="row">
                     
-                    <div class="col-md-3">
-                        <h4 for="meuInput">Part Number:</h4>
-                        <input type="text" id="part_number" name="part_number" placeholder="Part Number...">
+                    <div class="col-md-3 form-group">
+                        {{ form_pnumber.part_number.label(class_="form-label") }}
+                        {{ form_pnumber.part_number(class_="form-input") }}
                     </div>
 
-                    <div class="col-md-3">
-                        <h4 for="meuInput">Product:</h4>
-                        <input type="text" id="product" name="product" placeholder="Little description...">
+                    <div class="col-md-3 form-group">
+                        {{ form_pnumber.product.label(class_="form-label") }}
+                        {{ form_pnumber.product(class_="form-input") }}
                     </div>
                     
-                    <div class="col-md-3">
-                        <h4 for="vendor_id">Vendor</h4>
-                        <select class="form-control" name="vendor_id" id="vendor_id">
-                            {% for row in vendor %}
-                            <option value="{{ row.id_vendors }}">{{ row.name }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="col-md-3 form-group">
+                        {{ form_pnumber.vendor.label(class_="form-label") }}
+                        {{ form_pnumber.vendor(class_="form-input") }}
                     </div>
-                    <div class="col-md-3 ">
+                    <div class="col-md-3 form-group">
                         <a type="button" class="btn btn-primary btn-align" href="{{ url_for('add_vendor') }}">
                             Adicionar Vendor +
                         </a>
@@ -41,28 +37,25 @@
                 
                 <div class="row">
                     
-                    <div class="col-md-4">
-                        <h4 for="obsolescence">Obsolescence</h4>
-                        <select name="obsolescence" id="obsolescence">
-                            {% for row in obsolescence %}
-                            <option value="{{ row.id_obs }}">{{ row.status }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="col-md-3 form-group">
+                        {{ form_pnumber.obsolescence.label(class_="form-label") }}
+                        {{ form_pnumber.obsolescence(class_="form-input") }}
                     </div>
-                    <div class="col-md-4">
-                        <h4 for="meuInput">Year of Discontinued State:</h4>
-                        <input type="text" id="end_life" name="end_life" placeholder="Ex.: 2025">
+                    <div class="col-md-3 form-group">
+                        {{ form_pnumber.year_discontinued.label(class_="form-label") }}
+                        {{ form_pnumber.year_discontinued(class_="form-input") }}
                     </div>
                     
-                    <div class="col-md-4">
-                        <h4 for="meuInput">Foto:</h4>
-                        {{ form_photo.foto() }}
-                        <img id="preview" src="#" alt="Prévia da imagem" style="display: none; max-width: 200px; max-height: 200px;"/>
+                    <div class="col-md-3 form-group">
+                        {{ form_pnumber.foto.label(class_="form-label") }}
+                        {{ form_pnumber.foto(class_="form-input") }}
+                        <img id="preview" src="#" style="display: none; max-width: 200px; max-height: 200px;"/>
                     </div>
                 </div>                 
                 
                 <hr>
-                {{ form_photo.btt_confirm(class_="btn btn-success btn-lg btn-block btn-add-pn") }}
+                {{ form_pnumber.save_btt(class_="btn btn-success btn-lg btn-save") }}
+            <button style="width: 100%; margin-top: 0.5cm;" class="btn btn-danger" type="button" onclick="resetForm('form_addVendor')">Cancelar</button>
             </div>
                 
             </form>

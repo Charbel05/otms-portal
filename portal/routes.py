@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import datetime
 import psycopg2
 from portal import app, db, bcrypt
-from portal.forms import FormAddVendor, FormLogin, FormPhoto
+from portal.forms import FormAddVendor, FormLogin, FormAddPartNumber
 from portal.models import Almox, Location, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
@@ -144,45 +144,43 @@ def add_rpn():
 @login_required
 def add_partnumber(): 
 
-    # Seleciona a tabela de Vendor
-    vendor = Vendors.query.order_by(Vendors.id_vendors).all()
-    # Seleciona a tabela de Obsolescence
-    obsolescence = Obsolescence.query.order_by(Obsolescence.level).all()
-    
+    vendor = Vendors.query.order_by().all()
+    obsolescence = Obsolescence.query.order_by().all()
     parts = Parts.query.order_by().all()
-    form_photo = FormPhoto()
+
+    form_pnumber = FormAddPartNumber()
+    form_pnumber.vendor.choices = [(row.id_vendors, row.name) for row in vendor]
+    form_pnumber.obsolescence.choices = [(row.id_obs, row.status) for row in obsolescence]
     
     nome_seguro = ""
     if request.method == 'POST':
         try: 
             # Cria um novo objeto rpn e adiciona           
             new_part = Parts(created=datetime.date.today(), modified_by=current_user.get_name())
-            new_part.part_number = request.form.get('part_number')
-            new_part.product = request.form.get('product')
-            new_part.vendor_id = request.form.get('vendor_id')
-            new_part.obsolescence_id = request.form.get('obsolescence')
-            new_part.end_life = request.form.get('end_life')
+            new_part.part_number = form_pnumber.part_number.data
+            new_part.product = form_pnumber.product.data
+            new_part.vendor_id = form_pnumber.vendor.data
+            new_part.obsolescence_id = form_pnumber.obsolescence.data
+            new_part.end_life = form_pnumber.year_discontinued.data
             # Faz a consulta no banco para saber qual o último id
             last_id = Parts.query.order_by(Parts.id_parts.desc()).first()
             new_part.id_parts = last_id.id_parts + 1
 
-            # if(form_photo.btt_confirm()):
-            arquivo = form_photo.foto.data
+            arquivo = form_pnumber.foto.data
             nome_seguro = secure_filename(arquivo.filename)
             caminho = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config["UPLOAD_FOLDER"], nome_seguro)
             arquivo.save(caminho)
-            new_part.fotos = nome_seguro
-            
+            new_part.fotos = nome_seguro            
 
             db.session.add(new_part)
             db.session.commit()
+            return redirect(url_for('add_partnumber'))
 
         except Exception as e:
             flash(f"Erro ao adicionar o part number: {str(e)}")
-            print(f"Erro ao adicionar o part number: {str(e)}")
             return render_template('add_part.html')
 
-    return render_template('add_part.html', vendor=vendor, obsolescence=obsolescence, form_photo=form_photo, filename=nome_seguro, parts=parts)
+    return render_template('add_part.html', form_pnumber=form_pnumber, filename=nome_seguro)
 
 @app.route('/add-vendor', methods=['GET', 'POST'])
 @login_required
@@ -190,22 +188,18 @@ def add_vendor():
     
     region = Regions.query.order_by().all()
     form_addVendor = FormAddVendor()
+    form_addVendor.region.choices = [(row.id_region, row.region) for row in region]
 
     if request.method == 'POST':
         # Cria um novo objeto vendor   
         new_vendor = Vendors()
-        new_vendor.name = request.form.get('name')
-        new_vendor.region_id = request.form.get('region')
-
-        support_after_sales = request.form.get('after_sales')
-        new_vendor.support_after_sales = True if support_after_sales == 'on' else False
-        
-        active = request.form.get('active')
-        new_vendor.active = True if active == 'on' else False
-
-        new_vendor.site = request.form.get('site')
-        new_vendor.email = request.form.get('email')
-        new_vendor.phone = request.form.get('phone')
+        new_vendor.name = form_addVendor.name.data
+        new_vendor.region_id = form_addVendor.region.data
+        new_vendor.support_after_sales = form_addVendor.after_sales_support.data
+        new_vendor.active = form_addVendor.active.data
+        new_vendor.site = form_addVendor.site.data
+        new_vendor.email = form_addVendor.email.data
+        new_vendor.phone = form_addVendor.contact_phone.data
         new_vendor.modified_by = current_user.get_name()
 
         # Faz a consulta no banco para saber qual o último id
@@ -215,6 +209,7 @@ def add_vendor():
         
         db.session.add(new_vendor)
         db.session.commit()
+        return redirect(url_for('add_vendor'))
 
     return render_template('add_vendor.html', form_addVendor=form_addVendor)
 
