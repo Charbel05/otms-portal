@@ -67,7 +67,7 @@ class Almox(db.Model):
 class Vendors(db.Model):
     id_vendors = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=True)
-    region_id = db.Column(db.Integer, nullable=True)
+    region_id = db.Column(db.Integer, ForeignKey('regions.id_region'), nullable=True)
     area_novelis_id = db.Column(db.Integer, nullable=True)
     sgroups_id = db.Column(db.Integer, nullable=True)
     area_vendor_id = db.Column(db.Integer, nullable=True)
@@ -89,16 +89,28 @@ class Regions(db.Model):
 
 class Location(db.Model):
     id_location = db.Column(db.Integer, primary_key=True)
-    plant = db.Column(db.String(100), nullable=True)
-    groups = db.Column(db.String(100), nullable=True)
-    management = db.Column(db.String(100), nullable=True)
     description_category = db.Column(db.String(100), nullable=True)
+    plant_id = db.Column(db.Integer, ForeignKey('plant.id_plant'), nullable=True)
+    mu_id = db.Column(db.Integer, ForeignKey('manufactoring_unit.id_mu'), nullable=True)
+    subarea_id = db.Column(db.Integer, ForeignKey('subarea.id_subarea'), nullable=True)
     class_loc = db.Column(db.String(100), nullable=True)
     code_subarea = db.Column(db.String(100), nullable=True)
-    category_id = db.Column(db.Integer, nullable=True)
 
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+    
+class Plant(db.Model):
+    id_plant = db.Column(db.Integer, primary_key=True)
+    plant = db.Column(db.String(100), nullable=True)
+
+class Manufactoring_unit(db.Model):
+    id_mu = db.Column(db.Integer, primary_key=True)
+    mu = db.Column(db.String(100), nullable=True)
+
+class Subarea(db.Model):
+    id_subarea = db.Column(db.Integer, primary_key=True)
+    subarea = db.Column(db.String(100), nullable=True)
+    region_id = db.Column(db.Integer, ForeignKey('regions.id_region'), nullable=True)
 
 class System_groups(db.Model):
     id_s_group = db.Column(db.Integer, primary_key=True)
