@@ -78,13 +78,13 @@
                     <h4 for="loc"> Location: </h4>
                     <select class="form-control select2" name="loc" id="loc"
                     onchange="updateInfo('loc',
-                        {groups: 'groups'},
+                        {mu: 'mu'},
                         )">
                         <option value="" disabled selected>Selecione uma localização</option>
-                        {% for row in loc %}
-                            <option value="{{ row['id_location'] }}"
-                            data-groups="{{ row['groups'] }}">
-                            {{ row['description_category'] }}
+                        {% for location, mu  in loc %}
+                            <option value="{{ location['id_location'] }}"
+                            data-mu="{{ mu['mu'] }}">
+                            {{ location['description_category'] }}
                             </option>
                         {% endfor %}
                     </select>
@@ -92,7 +92,7 @@
 
                 <div class="col-md-6">
                     <h4>Responsible Area:</h4>
-                    <a id="groups"> </a>
+                    <a id="mu"> </a>
                 </div>
             </div>
 

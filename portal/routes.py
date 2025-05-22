@@ -5,7 +5,7 @@ import datetime
 import psycopg2
 from portal import app, db, bcrypt
 from portal.forms import FormAddVendor, FormLogin, FormAddPartNumber, FormRPN
-from portal.models import Almox, Location, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
+from portal.models import Almox, Location, Manufactoring_unit, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
 
@@ -98,7 +98,11 @@ def add_rpn():
     parts = db.session.query(Parts, vendor_alias, obsolescence_alias).join(vendor_alias, Parts.vendor_id == vendor_alias.id_vendors).join(obsolescence_alias, Parts.obsolescence_id == obsolescence_alias.id_obs).order_by(Parts.part_number).all()
     formItem.part_number.choices = [(part.id_parts, part.part_number) for part, vendor, obsolescence in parts]
 
-    loc = Location.query.order_by(Location.description_category).all()
+    mu_alias = aliased(Manufactoring_unit)
+    loc = db.session.query(Location, mu_alias).join(mu_alias, Location.mu_id == mu_alias.id_mu).order_by(Location.mu_id).all()
+    for location, mu in loc:
+        print("Location: " + location.description_category)
+        print("Area: " + mu.mu)
 
     sgroup = System_groups.query.order_by(System_groups.id_s_group).all()
     formItem.sgroup.choices += [(row.id_s_group, row.system_group) for row in sgroup]
