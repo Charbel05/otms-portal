@@ -2,254 +2,215 @@
 
 {% block body %}
 
-    <div class="content">
+<div class="content">
 
-        <div>
-            <h1 style="padding-left: 40%;">Adicionar Item</h1>
+    <div>
+        <h1 style="padding-left: 40%;">Adicionar Item</h1>
+
+        <hr>
+        <div class="header">
+            <i class="bi bi-archive"></i>
+            <h4>Item</h4>
+        </div>
+        
+        <form method="POST">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 for="parts"> Part Number: </h4>                
+                    <select class="form-control select2" name="parts" id="parts" data-base-url="{{ url_for('static', filename='upload_photos/') }}"
+                        onchange="updateInfo(
+                        'parts', 
+                        {Obsolescence: 'Obsolescence', 
+                        Vendor: 'Vendor', 
+                        product: 'product', 
+                        fotos: 'fotos'},
+                        'part_number'
+                    )">
+                    <option value="" disabled selected>Selecione um part number</option>
+                    {% for part, vendor, obsolescence in parts %}
+                    <option value="{{ part.id_parts }}" 
+                            data-obsolescence="{{ obsolescence.status }}" 
+                            data-vendor="{{ vendor.name }}" 
+                            data-product="{{ part.product }}" 
+                            data-fotos="{{ part.fotos }}">
+                            {{ part.part_number }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 d-flex align-items-center">
+                    <a type="button" class="btn btn-primary btn-align" data-toggle="tooltip" data-placement="right" title="Apenas caso não tenha encontrado o Part Number desejado!" href="{{ url_for('add_partnumber') }}">
+                        Adicionar Part Number +
+                    </a>      
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <h4>Description: </h4>
+                    <a id="product"></a>
+                    
+                    <h4>Vendor: </h4>
+                    <a id="Vendor"></a>
+
+                    <h4>Obsolescence: </h4>
+                    <a id="Obsolescence"></a>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="image-container">
+                        <h4 class="fixed-tag">Foto:</h4>
+                        <img id="fotos" alt="Prévia da imagem" class="image-preview">
+                    </div>
+                </div>
+            </div>
+
+            
+            <hr>
+            <div class="header">
+                <i class="bi bi-geo-alt"></i>
+                <h4 for="loc"> Local unit </h4>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 for="loc"> Location: </h4>
+                    <select class="form-control select2" name="loc" id="loc"
+                    onchange="updateInfo('loc',
+                        {groups: 'groups'},
+                        )">
+                        <option value="" disabled selected>Selecione uma localização</option>
+                        {% for row in loc %}
+                            <option value="{{ row['id_location'] }}"
+                            data-groups="{{ row['groups'] }}">
+                            {{ row['description_category'] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Responsible Area:</h4>
+                    <a id="groups"> </a>
+                </div>
+            </div>
+
 
             <hr>
             <div class="header">
-                <i class="bi bi-archive"></i>
-                <h4>Item</h4>
+                <i class="bi bi-info-circle"></i>
+                <h4 class="">About item</h4>
             </div>
-            
-            <form method="POST">
                 
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4 for="parts"> Part Number: </h4>                
-                        <select class="form-control select2" name="parts" id="parts" data-base-url="{{ url_for('static', filename='upload_photos/') }}"
-                            onchange="updateInfo(
-                            'parts', 
-                            {Obsolescence: 'Obsolescence', 
-                            Vendor: 'Vendor', 
-                            product: 'product', 
-                            fotos: 'fotos'},
-                            'part_number'
-                        )">
-                        <option value="" disabled selected>Selecione um part number</option>
-                        {% for part, vendor, obsolescence in parts %}
-                        <option value="{{ part.id_parts }}" 
-                                data-obsolescence="{{ obsolescence.status }}" 
-                                data-vendor="{{ vendor.name }}" 
-                                data-product="{{ part.product }}" 
-                                data-fotos="{{ part.fotos }}">
-                                {{ part.part_number }}
-                            </option>
-                        {% endfor %}
-                        </select>
+            <div class="row">
+                <div class="col-md-6">
+                    
+                    <div class="form-group">
+                        {{ formItem.ci_level.label(class_="form-label") }}
+                        {{ formItem.ci_level(class_="form-input") }}
                     </div>
-                    <div class="col-md-6 d-flex align-items-center">
-                        <a type="button" class="btn btn-primary btn-align" data-toggle="tooltip" data-placement="right" title="Apenas caso não tenha encontrado o Part Number desejado!" href="{{ url_for('add_partnumber') }}">
-                            Adicionar Part Number +
-                        </a>      
+
+                    <div class="form-group">                            
+                        {{ formItem.vsupport.label(class_="form-label") }}
+                        {{ formItem.vsupport(class_="form-input") }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ formItem.savailability.label(class_="form-label") }}
+                        {{ formItem.savailability(class_="form-input") }}
                     </div>
                 </div>
 
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <h4>Description: </h4>
-                        <a id="product"></a>
-                        
-                        <h4>Vendor: </h4>
-                        <a id="Vendor"></a>
-
-                        <h4>Obsolescence: </h4>
-                        <a id="Obsolescence"></a>
+                <div class="col-md-6">
+                    <div class="form-group">                            
+                        {{ formItem.scondition.label(class_="form-label") }}
+                        {{ formItem.scondition(class_="form-input") }}
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ formItem.scomplexity.label(class_="form-label") }}
+                        {{ formItem.scomplexity(class_="form-input") }}
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="image-container">
-                            <h4 class="fixed-tag">Foto:</h4>
-                            <img id="fotos" alt="Prévia da imagem" class="image-preview">
-                        </div>
+                    <div class="form-group">
+                        {{ formItem.sgroup.label(class_="form-label") }}
+                        {{ formItem.sgroup(class_="form-input") }}
+                    </div>                        
+                </div>
+            </div>  
+
+            <hr>
+
+            <div class="header">
+                <h4>Other informations</h4>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ formItem.inactive.label(class_="form-label") }}
+                        <label class="switch">
+                            {{ formItem.inactive(class_="form-input") }}
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        {{ formItem.quantity.label(class_="form-label") }}
+                        {{ formItem.quantity(class_="form-input") }}
+                    </div>
+                    <div class="form-group">
+                        {{ formItem.cost.label(class_="form-label") }}
+                        {{ formItem.cost(class_="form-input") }}
                     </div>
                 </div>
-
-                
-                <hr>
-                <div class="header">
-                    <i class="bi bi-geo-alt"></i>
-                    <h4 for="loc"> Local unit </h4>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <h4 for="loc"> Location: </h4>
-                        <select class="form-control select2" name="loc" id="loc"
-                        onchange="updateInfo('loc',
-                            {groups: 'groups'},
-                            )">
-                            <option value="" disabled selected>Selecione uma localização</option>
-                            {% for row in loc %}
-                                <option value="{{ row['id_location'] }}"
-                                data-groups="{{ row['groups'] }}">
-                                {{ row['description_category'] }}</option>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ formItem.project_number.label(class_="form-label") }}
+                        {{ formItem.project_number(class_="form-input") }}
+                    </div>
+                    <div class="form-group">
+                        {{ formItem.description.label(class_="form-label") }}
+                        {{ formItem.description(class_="form-input") }}
+                    </div>
+                    <div class="form-group">
+                        <h4 for="almox">Contingency</h4>
+                        <select name="almox" id="almox" 
+                        onchange="updateInfo('almox', {
+                            description_contingency:'description_contingency',
+                            active: 'active'
+                            })">
+                            <option value="" disabled selected>Selecione uma contingência</option>
+                            {% for row in almox %}
+                                <option value="{{ row['id_almox'] }}" 
+                                data-description_contingency="{{ row['description'] }}"
+                                data-active="{{ row['active'] }}">
+                                {{ row['cd_item'] }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
-                    <div class="col-md-6">
-                        <h4>Responsible Area:</h4>
-                        <a id="groups"> </a>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">                   
+                        <h4>Contingency status:</h4>
+                        <a id="active"></a>  
+                    </div>
+                    <div class="form-group">
+                        <h4>Contingency description</h4>
+                        <a name="description_contingency" id="description_contingency"></a>
+                    </div>
+                    <div class="form-group">
+                        
                     </div>
                 </div>
+            </div>                
 
-                <hr>
-                <div class="header">
-                    <i class="bi bi-info-circle"></i>
-                    <h4 class="">About item</h4>
-                </div>
-                    
-                <div class="row">
-                    <div class="col-md-6">
-                        
-                        <div class="form-group">
-                            <h4> Costumer impact level </h4>
-                            <select class="form-control select2" name="ci_value" id="ci_value">
-                                <option value="" disabled selected>Selecione uma opção</option>
-                                <option value=4>Incomplete</option>
-                                <option value=1>No Impact</option>
-                                <option value=2>Shipment Delays</option>
-                                <option value=3>Customer Shutdown</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">                            
-                            <h4> Vendor Support </h4>
-                            <select class="form-control select2" name="vendor_support" id="vendor_support">
-                                <option value="" disabled selected>Selecione uma opção</option>
-                                <option value=1>Very Limited</option>
-                                <option value=2>Poor</option>
-                                <option value=3>Marginal</option>
-                                <option value=4>Adequate</option>
-                                <option value=5>Excellent</option>
-                                <option value=6>Incomplete</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <h4 > Spare availability </h4>
-                            <select class="form-control select2" name="sa_value" id="sa_value">
-                                <option value="" disabled selected>Selecione uma opção</option>
-                                <option value=5>Incomplete</option>
-                                <option value=1>Installed Spare</option>
-                                <option value=3>Spare On Site or Off Site < 8 Hours Lead Time</option>
-                                <option value=2>Spare On Site or Off Site > 8 Hours Lead Time</option>
-                                <option value=4>No Spare</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">                            
-                            <h4 > Spare Condition </h4>
-                            <select class="form-control select2" name="sc_value" id="sc_value">
-                                <option value="" disabled selected>Selecione uma opção</option>
-                                <option value=6>Incomplete</option>
-                                <option value=1>Excellent Condition</option>
-                                <option value=3>Good Condition</option>
-                                <option value=5>Fair Condition</option>
-                                <option value=4>Poor Condition</option>
-                                <option value=2>Do Not Use or No Spare</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <h4 > System Complexity </h4>
-                            <select class="form-control select2" name="system_complexity" id="system_complexity">
-                                <option value="" disabled selected>Selecione uma opção</option>
-                                <option value=1>Low & Multiple Sourcing</option>
-                                <option value=2>Medium Specialized & Limited Sourcing</option>
-                                <option value=3>Medium Specialized & Multiple Sourcing</option>
-                                <option value=4>Highly Specialized &  Limited Sourcing</option>
-                                <option value=5>Incomplete</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <h4>System Group</h4>
-                            <select class="form-control select2" name="sgroup" id="sgroup">
-                                <option value="" disabled selected>Selecione uma opção</option>
-                                {% for row in sgroup %}
-                                    <option value="{{ row['id_s_group'] }}">{{ row['system_group'] }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>                        
-                    </div>
-                </div>  
-
-                <hr>
-
-                <div class="header">
-                    <h4>Other informations</h4>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <h4 for="meuInput">Inactive</h4>                    
-                            <label class="switch" style="margin-right: 50px;">
-                                <input type="checkbox" name="inactive" id="inactive">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <h4 for="meuInput">Installed Quantity:</h4>
-                            <input type="text" id="quantity" name="quantity" placeholder="Installed Quantity...">
-                        </div>
-                        <div class="form-group">
-                            <h4 for="meuInput">Cost</h4>
-                            <input type="text" id="cost" name="cost" placeholder="$">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <h4 for="meuInput">Project Number</h4>
-                            <input style="width: 100%; " type="text" id="pa" name="pa" placeholder="Project number">
-                        </div>
-                        <div class="form-group">
-                            <h4 for="meuInput">Description:</h4>
-                            <input style="width: 100%;" type="text" id="description" name="description" placeholder="Description...">    
-                        </div>
-                        <div class="form-group">
-                            <h4 for="almox">Contingency</h4>
-                            <select name="almox" id="almox" 
-                            onchange="updateInfo('almox', {
-                                description_contingency:'description_contingency',
-                                active: 'active'
-                                })">
-                                <option value="" disabled selected>Selecione uma contingência</option>
-                                {% for row in almox %}
-                                    <option value="{{ row['id_almox'] }}" 
-                                    data-description_contingency="{{ row['description'] }}"
-                                    data-active="{{ row['active'] }}">
-                                    {{ row['cd_item'] }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">                   
-                            <h4>Contingency status:</h4>
-                            <a id="active"></a>  
-                        </div>
-                        <div class="form-group">
-                            <h4>Contingency description</h4>
-                            <a name="description_contingency" id="description_contingency"></a>
-                        </div>
-                        <div class="form-group">
-                            
-                        </div>
-                    </div>
-                </div>                
-
-                <br>
-                <hr>
-                <input style="width: 100%;" class="btn btn-success btn-lg btn-block" type="submit" value="Salvar">
-                              
-            </form>
-        </div>
+            <br>
+            <hr>
+            {{ formItem.save_btt(class="btn btn-success btn-lg btn-save") }}
+            <button style="width: 100%; margin-top: 0.5cm;" class="btn btn-danger" type="button" onclick="resetForm('form_addVendor')">Cancelar</button>
+        </form>
     </div>
+</div>
 
 {% endblock %} 

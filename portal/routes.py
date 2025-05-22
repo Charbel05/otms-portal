@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import datetime
 import psycopg2
 from portal import app, db, bcrypt
-from portal.forms import FormAddVendor, FormLogin, FormAddPartNumber
+from portal.forms import FormAddVendor, FormLogin, FormAddPartNumber, FormRPN
 from portal.models import Almox, Location, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
@@ -91,39 +91,39 @@ def perfil():
 @app.route('/add-rpn', methods=['GET', 'POST'])
 @login_required
 def add_rpn(): 
-
-    # Seleciona a tabela de location
-    loc = Location.query.order_by(Location.description_category).all()
-
-    # Seleciona a tabela de System Groups
-    sgroup = System_groups.query.order_by(System_groups.id_s_group).all()
+    formItem = FormRPN()
 
     vendor_alias = aliased(Vendors)
     obsolescence_alias = aliased(Obsolescence)
     parts = db.session.query(Parts, vendor_alias, obsolescence_alias).join(vendor_alias, Parts.vendor_id == vendor_alias.id_vendors).join(obsolescence_alias, Parts.obsolescence_id == obsolescence_alias.id_obs).order_by(Parts.part_number).all()
-    
+    formItem.part_number.choices = [(part.id_parts, part.part_number) for part, vendor, obsolescence in parts]
+
+    loc = Location.query.order_by(Location.description_category).all()
+
+    sgroup = System_groups.query.order_by(System_groups.id_s_group).all()
+    formItem.sgroup.choices += [(row.id_s_group, row.system_group) for row in sgroup]
+
     almox = Almox.query.all()
 
     if request.method == 'POST':
         try:   
             new_rpn = Rpn()
             new_rpn.part_id = request.form.get('parts')
-            new_rpn.c_impact_id = request.form.get('ci_value')
-            new_rpn.spare_av_id = request.form.get('sa_value')
-            new_rpn.spare_c_id = request.form.get('sc_value')
-            new_rpn.vendorsuport_id = request.form.get('vendor_support')
+            new_rpn.c_impact_id = formItem.ci_level.data
+            new_rpn.spare_av_id = formItem.savailability.data
+            new_rpn.spare_c_id = formItem.scondition.data
+            new_rpn.vendorsuport_id = formItem.vsupport.data
             new_rpn.loc_id = request.form.get('loc')
-            new_rpn.sgroups_id = request.form.get('sgroup')
-            new_rpn.scomplexity_id = request.form.get('system_complexity')
-            new_rpn.quantity = request.form.get('quantity')
-            new_rpn.description = request.form.get('description')
+            new_rpn.sgroups_id = formItem.sgroup.data
+            new_rpn.scomplexity_id = formItem.scomplexity.data
+            new_rpn.quantity = formItem.quantity.data
+            new_rpn.description = formItem.description.data
             new_rpn.created_by = current_user.get_name()
             new_rpn.modified_by = current_user.get_name()
             new_rpn.last_modified = datetime.date.today()
-            new_rpn.pa = request.form.get('pa')
-            new_rpn.cost = request.form.get('cost')            
-            inactive = request.form.get('inactive')
-            new_rpn.inactive = 1 if inactive == 'on' else 0
+            new_rpn.pa = formItem.project_number.data
+            new_rpn.cost = formItem.cost.data            
+            new_rpn.inactive = formItem.inactive.data
             new_rpn.almox_id = request.form.get('almox')
 
             # Faz a consulta no banco para saber qual o último id
@@ -134,11 +134,13 @@ def add_rpn():
             db.session.add(new_rpn)
             db.session.commit()
 
+            return redirect(url_for('add_rpn'))
+
         except Exception as e:
             flash(f"Erro ao adicionar o item: {str(e)}")
             return render_template('add_rpn.html')
 
-    return render_template('add_rpn.html', loc=loc, sgroup=sgroup, almox=almox, parts=parts)
+    return render_template('add_rpn.html', formItem=formItem, loc=loc, almox=almox, parts=parts)
         
 @app.route('/add-part-number', methods=['GET', 'POST'])
 @login_required
@@ -146,7 +148,6 @@ def add_partnumber():
 
     vendor = Vendors.query.order_by().all()
     obsolescence = Obsolescence.query.order_by().all()
-    parts = Parts.query.order_by().all()
 
     form_pnumber = FormAddPartNumber()
     form_pnumber.vendor.choices = [(row.id_vendors, row.name) for row in vendor]
