@@ -2,73 +2,96 @@
 
 {% block body %}
 
-    <div class="content">
+<div class="content">
+    
+    <h1 style="padding-left: 30%;">Editar propriedades do item</h1>
+    <hr>
 
-        <div>
-            <h1>Editar - Propriedades do item</h1>
-        </div>
-
-        <hr>
-
-        <form id="form-edit-view" method="post">
-            <div>
-                <div class="info-item">
-                    <h4> Part Number </h4>
-                    <select name="part_number" id="part_number" onchange="updateText('part_number', 'Vendor', vendorsData)">
-                        {% for row in part_list %}
-                            <option 
-                            {% if part.id_parts == row.id_parts %} 
+    <form id="form-edit-view" method="post">
+        <div class="row">
+            <h4> Part Number </h4>
+            <div class="col-sm">
+                <select class="form-control select2" name="parts" id="parts" onchange="updateInfo(
+                    'parts',
+                    {Obsolescence: 'Obsolescence', 
+                     Vendor: 'Vendor'},
+                    'part_number')">
+                    {% for part, vendor, obsolescence in parts %}
+                        <option 
+                            {% if current_part.id_parts == part.id_parts %} 
                                 selected 
-                            {% endif %}
-                            value="{{ row.id_parts }}">{{ row.part_number }}</option>
-                        {% endfor %}
-                    </select>
-        
-                    <h4>Location</h4>
-                    <select name="loc" id="loc" onchange="updateText('loc', 'groups', locData)">
-                        {% for row in loc %}
-                            <option 
-                            {% if rpn.loc_id == row.id_location %} 
-                                selected 
-                            {% endif %}
-                            value="{{ row.id_location }}">{{ row.description_category }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="info-item">
-                    <h6>Vendor</h6>
-                    
-                    <h7 id="Vendor"> 
+                                value="{{ current_part.id_parts }}" 
+                                data-obsolescence="{{ obsolescence.status }}" 
+                                data-vendor="{{ vendor.name }}"
+                            {% endif %}>
+                            {{ part.part_number }}
+                        </option>
+                        <option 
+                            value="{{ part.id_parts }}" 
+                            data-obsolescence="{{ obsolescence.status }}" 
+                            data-vendor="{{ vendor.name }}">
+                            {{ part.part_number }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-sm">
+                <a class="btn btn-primary" href="{{ url_for('edit_part_number', partnumber=current_part.part_number) }}">Editar Part Number</a>
+            </div>
+            <h4>Location</h4>
+            <div class="col-sm">                
+                <select name="loc" id="loc" onchange="updateInfo('loc', 'groups', locData)">
+                    {% for row in loc %}
+                        <option 
+                        {% if rpn.loc_id == row.id_location %} 
+                            selected 
+                        {% endif %}
+                        value="{{ row.id_location }}">{{ row.description_category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-6">   
+                <h4>Responsible Area: </h4>                
+                <a id="groups"> 
+                    {% for row in loc %}
+                        {% if rpn.loc_id == row.id_location %} 
+                            {{ row.management }}
+                        {% endif %}
+                    {% endfor %}
+                </a>
+            </div>
+
+            <div class="row">
+
+                <h4>Vendor: </h4>                
+                <div class="col-sm">
+                    <a id="Vendor"> 
                         {% for row in vendors_list %}
-                            {% if part.vendor_id == row.id_vendors %} 
+                            {% if parts.vendor_id == row.id_vendors %} 
                                 {{ row.name }}
                             {% endif %}
                         {% endfor %}
-                    </h7>
-
-                    <h6>Obsolescence</h6>
-                    
-                    <h7 id="Obsolescence"> 
+                    </a>
+                </div>
+                <h4>Obsolescence: </h4>                
+                <div class="col-sm">                    
+                    <a id="Obsolescence"> 
                         {% for row in obs %}
-                            {% if part.obsolescence_id == row.id_obs %} 
+                            {% if parts.obsolescence_id == row.id_obs %} 
                                 {{ row.status }}
                             {% endif %}
                         {% endfor %}
-                    </h7>
-                    <a class="btn btn-primary" href="{{ url_for('edit_part_number', partnumber=part.part_number) }}">Editar Part Number</a>
-
-                    <h4>Responsible Area</h4>
-                    
-                    <h7 id="groups"> 
-                        {% for row in loc %}
-                            {% if rpn.loc_id == row.id_location %} 
-                                {{ row.management }}
-                            {% endif %}
-                        {% endfor %}
-                    </h7>
+                    </a>                
                 </div>
+            </div>
+        
+        </div>
 
-                <div class="info-item">          
+        <div class="row">            
+            <hr>
+            <div class="col-md-6">
+                <div class="form-group">
                     <h4>System Group</h4>
                     <select name="sg_value" id="sg_value" >
                         {% for row in sgroup %}
@@ -79,7 +102,8 @@
                             value="{{ row.id_s_group }}">{{ row.system_group }}</option>
                         {% endfor %}
                     </select>
-
+                </div>          
+                <div class="form-group">
                     <h4 > System Complexity </h4>
                     <span class="static-text">  </span>
                     <select name="system_complexity" id="system_complexity">
@@ -90,7 +114,7 @@
                         <option value=5 {% if rpn.scomplexity_id == 5 %} selected {% endif %}>Incomplete</option>
                     </select>
                 </div>
-                <div class="info-item">
+                <div class="form-group">
                     <h4>Spare Availability</h4>
                     <span class="static-text">  </span>
                     <select name="sa_value" id="sa_value">
@@ -100,7 +124,10 @@
                         <option value=2 {% if rpn.spare_av_id == 2 %} selected {% endif %}>Spare On Site or Off Site > 8 Hours Lead Time</option>
                         <option value=4 {% if rpn.spare_av_id == 4 %} selected {% endif %}>No Spare</option>
                     </select>
-                    
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
                     <h4>Costumer Impact</h4>
                     <span class="static-text">  </span>
                     <select name="ci_value" id="ci_value">
@@ -109,8 +136,8 @@
                         <option value=2 {% if rpn.c_impact_id == 2 %} selected {% endif %}>Shipment Delays</option>
                         <option value=3 {% if rpn.c_impact_id == 3 %} selected {% endif %}>Customer Shutdown</option>
                     </select>
-                </div>
-                <div class="info-item">
+                </div>          
+                <div class="form-group">
                     <h4>Spare Condition</h4>
                     <span class="static-text">  </span>
                     <select name="sc_value" id="sc_value">
@@ -121,7 +148,8 @@
                         <option value=4 {% if rpn.spare_c_id == 4 %} selected {% endif %}>Poor Condition</option>
                         <option value=2 {% if rpn.spare_c_id == 2 %} selected {% endif %}>Do Not Use or No Spare</option>
                     </select>   
-
+                </div>
+                <div class="form-group">
                     <h4>Vendor Support</h4>
                     <select name="vendor_support" id="vendor_support">
                         <option value=1 {% if rpn.vendorsuport_id == 1 %} selected {% endif %}>Very Limited</option>
@@ -131,23 +159,29 @@
                         <option value=5 {% if rpn.vendorsuport_id == 5 %} selected {% endif %}>Excellent</option>
                         <option value=6 {% if rpn.vendorsuport_id == 6 %} selected {% endif %}>Incomplete</option>
                     </select>
-
                 </div>
+            </div>
 
+            <hr>
+
+            <div class="col-md-3">
                 <h4 for="meuInput">Quantity:</h4>
                 <input type="text" id="quantity" name="quantity" value="{{ rpn.quantity }}">
-
+    
                 <h4 for="meuInput">Description:</h4>
                 <input type="text" id="description" name="description" value="{{ rpn.description }}">
-
             </div>
-        
-            <button type="submit">Salvar</button>
-        </form>
+
+
+        </div>
     
+        <br>
         <hr>
-        
-    </div>
+        {{ form_editItem.save_btt(class="btn btn-success btn-lg btn-save") }}
+        <button style="width: 100%; margin-top: 0.5cm;" class="btn btn-danger" type="button" onclick="resetForm('form_editItem')">Cancelar</button>
+
+    </form>
+</div>
 
 
 

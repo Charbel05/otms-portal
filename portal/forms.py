@@ -26,6 +26,9 @@ class FormRPN(flask_wtf.FlaskForm):
     contingency = SelectField('Contingency', choices=[])
     save_btt = SubmitField('Salvar', validators=[DataRequired()])
 
+class FormEditRPN(flask_wtf.FlaskForm):
+    save_btt = SubmitField('Salvar', validators=[DataRequired()])
+
 class FormAddVendor(flask_wtf.FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     after_sales_support = BooleanField('After sales support')

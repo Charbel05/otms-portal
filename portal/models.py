@@ -38,7 +38,7 @@ class Rpn(db.Model):
     pa = db.Column(db.String(20), nullable=True)
     cost = db.Column(db.Integer, nullable=True)
     inactive = db.Column(db.Integer, nullable=True)
-    almox_id = db.Column(db.Integer, ForeignKey('almox.id_almox'), nullable=True)
+    #almox_id = db.Column(db.Integer, ForeignKey('almox.id_almox'), nullable=True)
 
 class Parts(db.Model):
     id_parts = db.Column(db.Integer, primary_key=True)

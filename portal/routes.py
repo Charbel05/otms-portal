@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import datetime
 import psycopg2
 from portal import app, db, bcrypt
-from portal.forms import FormAddVendor, FormLogin, FormAddPartNumber, FormRPN
+from portal.forms import FormAddVendor, FormEditRPN, FormLogin, FormAddPartNumber, FormRPN
 from portal.models import Almox, Location, Manufactoring_unit, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
@@ -100,9 +100,6 @@ def add_rpn():
 
     mu_alias = aliased(Manufactoring_unit)
     loc = db.session.query(Location, mu_alias).join(mu_alias, Location.mu_id == mu_alias.id_mu).order_by(Location.mu_id).all()
-    for location, mu in loc:
-        print("Location: " + location.description_category)
-        print("Area: " + mu.mu)
 
     sgroup = System_groups.query.order_by(System_groups.id_s_group).all()
     formItem.sgroup.choices += [(row.id_s_group, row.system_group) for row in sgroup]
@@ -218,15 +215,20 @@ def add_vendor():
 
     return render_template('add_vendor.html', form_addVendor=form_addVendor)
 
-@app.route('/edit-rpn/<id_rpn>', methods=['GET', 'POST'])
+@app.route('/edit-item/<id_rpn>', methods=['GET', 'POST'])
 @login_required
 def edit_rpn(id_rpn):
 
+    form_editItem = FormEditRPN()
+
+    vendor_alias = aliased(Vendors)
+    obsolescence_alias = aliased(Obsolescence)
+    parts = db.session.query(Parts, vendor_alias, obsolescence_alias).join(vendor_alias, Parts.vendor_id == vendor_alias.id_vendors).join(obsolescence_alias, Parts.obsolescence_id == obsolescence_alias.id_obs).order_by(Parts.part_number).all()
+
     rpn = db.session.query(Rpn).filter_by(id_rpn=id_rpn).first()
-    part = db.session.query(Parts).filter_by(id_parts=rpn.part_id).first()
+    current_part = db.session.query(Parts).filter_by(id_parts=rpn.part_id).first()
 
     vendors_list = db.session.query(Vendors).filter_by().all()
-    part_list = db.session.query(Parts).filter_by().all()
     obs = db.session.query(Obsolescence).filter_by().all()
     loc = db.session.query(Location).filter_by().all()
     sgroup = db.session.query(System_groups).filter_by().all()
@@ -259,7 +261,7 @@ def edit_rpn(id_rpn):
             db.session.rollback()
             print("Erro ao editar: " + str(e))
 
-    return render_template('edit_rpn.html', rpn=rpn, part=part, vendors_list=vendors_list, part_list=part_list, sgroup=sgroup, obs=obs, loc=loc)
+    return render_template('edit_rpn.html', form_editItem=form_editItem, rpn=rpn, parts=parts, current_part=current_part, vendors_list=vendors_list, sgroup=sgroup, obs=obs, loc=loc)
 
 @app.route('/edit-part-number/<partnumber>', methods=['GET', 'POST'])
 @login_required
