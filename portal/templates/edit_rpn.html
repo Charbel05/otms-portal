@@ -24,7 +24,7 @@
                                 data-obsolescence="{{ obsolescence.status }}" 
                                 data-vendor="{{ vendor.name }}"
                             {% endif %}>
-                            {{ part.part_number }}
+                            {{ current_part.part_number }}
                         </option>
                         <option 
                             value="{{ part.id_parts }}" 
@@ -40,23 +40,32 @@
             </div>
             <h4>Location</h4>
             <div class="col-sm">                
-                <select name="loc" id="loc" onchange="updateInfo('loc', 'groups', locData)">
-                    {% for row in loc %}
+                <select name="loc" id="loc" onchange="updateInfo(
+                    'loc', 
+                    {mu: 'mu'}, 
+                    'description_category')">
+                    {% for row, mu in loc %}
                         <option 
-                        {% if rpn.loc_id == row.id_location %} 
-                            selected 
-                        {% endif %}
-                        value="{{ row.id_location }}">{{ row.description_category }}</option>
+                            {% if rpn.loc_id == row.id_location %} 
+                                selected 
+                            {% endif %}
+                            value="{{ row.id_location }}"
+                            data-mu="{{ mu.mu }}" >
+                            {{ row.description_category }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
 
-            <div class="col-md-6">   
+            <div class="col-md-3">   
                 <h4>Responsible Area: </h4>                
-                <a id="groups"> 
-                    {% for row in loc %}
+            </div>
+            
+            <div class="col-md-3">
+                <a id="mu"> 
+                    {% for row, mu in loc %}
                         {% if rpn.loc_id == row.id_location %} 
-                            {{ row.management }}
+                            {{ mu.mu }}
                         {% endif %}
                     {% endfor %}
                 </a>
@@ -70,6 +79,10 @@
                         {% for row in vendors_list %}
                             {% if parts.vendor_id == row.id_vendors %} 
                                 {{ row.name }}
+                            {% else %}
+                                {% if current_part.vendor_id == row.id_vendors %} 
+                                    {{ row.name }}
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     </a>
@@ -80,6 +93,10 @@
                         {% for row in obs %}
                             {% if parts.obsolescence_id == row.id_obs %} 
                                 {{ row.status }}
+                            {% else %}
+                                {% if current_part.obsolescence_id == row.id_obs %} 
+                                    {{ row.name }}
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     </a>                
@@ -166,10 +183,10 @@
 
             <div class="col-md-3">
                 <h4 for="meuInput">Quantity:</h4>
-                <input type="text" id="quantity" name="quantity" value="{{ rpn.quantity }}">
+                <input style="width: 100%" type="text" id="quantity" name="quantity" value="{{ rpn.quantity }}">
     
                 <h4 for="meuInput">Description:</h4>
-                <input type="text" id="description" name="description" value="{{ rpn.description }}">
+                <input style="width: 100%" type="text" id="description" name="description" value="{{ rpn.description }}">
             </div>
 
 

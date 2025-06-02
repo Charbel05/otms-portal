@@ -230,9 +230,10 @@ def edit_rpn(id_rpn):
 
     vendors_list = db.session.query(Vendors).filter_by().all()
     obs = db.session.query(Obsolescence).filter_by().all()
-    loc = db.session.query(Location).filter_by().all()
     sgroup = db.session.query(System_groups).filter_by().all()
 
+    mu_alias = aliased(Manufactoring_unit)
+    loc = db.session.query(Location, mu_alias).join(mu_alias, Location.mu_id == mu_alias.id_mu).filter_by().all()
 
     if request.method == 'POST':
         try:   
