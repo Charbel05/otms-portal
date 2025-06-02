@@ -5,7 +5,7 @@ import datetime
 import psycopg2
 from portal import app, db, bcrypt
 from portal.forms import FormAddVendor, FormEditRPN, FormLogin, FormAddPartNumber, FormRPN
-from portal.models import Almox, Location, Manufactoring_unit, Obsolescence, Parts, Regions, System_groups, User_otms, Rpn, Vendors
+from portal.models import Almox, Location, Manufactoring_unit, Obsolescence, Parts, Region, System_groups, User_otms, Rpn, Vendors
 from flask_login import current_user, login_required, login_user, logout_user
 import portal.queries as queries
 
@@ -188,7 +188,7 @@ def add_partnumber():
 @login_required
 def add_vendor():
     
-    region = Regions.query.order_by().all()
+    region = Region.query.order_by().all()
     form_addVendor = FormAddVendor()
     form_addVendor.region.choices = [(row.id_region, row.region) for row in region]
 
